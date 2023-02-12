@@ -21,16 +21,10 @@ class GMAIPlugin: Plugin<Settings> {
                 .filter { it.list()!!.any { child -> child.startsWith("build.gradle") } }
                 .filterNot { it in excludedProjects }
                 .forEach { moduleDir ->
-
                     val moduleName =
                         moduleDir.absolutePath.substring(rootProjectPathLength)
-                            .replace(File.separator, "-")
-                            .replaceFirst('-', ':')
-
+                            .replace(File.separator, ":")
                     include(moduleName)
-
-                    project(moduleName).projectDir = moduleDir
-
                 }
 
         }
