@@ -14,12 +14,17 @@ class GMAIPlugin: Plugin<Settings> {
 
             val excludedProjects =
                 listOf(
-                    File(rootDir, "buildSrc")
+                    File(rootDir, "buildSrc"),
+                    File(rootDir, "gradle"),
                 )
 
             rootDir.findAllPotentialModuleDirs()
                 .filter { it.list()!!.any { child -> child.startsWith("build.gradle") } }
-                .filterNot { it in excludedProjects }
+                .filterNot {testedFile ->
+                    excludedProjects.any {excludedDir ->
+                        testedFile.startsWith(excludedDir)
+                    }
+                }
                 .forEach { moduleDir ->
                     val moduleName =
                         moduleDir.absolutePath.substring(rootProjectPathLength)
